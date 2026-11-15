@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Schéma de Câblage - STM32 Nucleo-F401RE</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            margin: 0;
+            padding: 24px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #38bdf8;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 12px;
+            margin-bottom: 8px;
+        }
+        p.subtitle {
+            color: #94a3b8;
+            font-size: 16px;
+            margin-bottom: 24px;
+        }
+        .card {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            border: 1px solid #334155;
+        }
+        img, svg {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 16px;
+        }
+        th, td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid #334155;
+        }
+        th {
+            background-color: #0f172a;
+            color: #38bdf8;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #243048;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .badge-red { background: #ef4444; color: white; }
+        .badge-black { background: #000000; color: white; border: 1px solid #64748b; }
+        .badge-yellow { background: #eab308; color: black; }
+        .badge-blue { background: #3b82f6; color: white; }
+        .badge-green { background: #10b981; color: white; }
+        .badge-orange { background: #f97316; color: white; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Schéma de Câblage Matériel : STM32 Nucleo-F401RE</h1>
+    <p class="subtitle">Banc d'essai Semaine 1 : Capteur de sol capacitif v1.2, BME280 (I2C) et Relais 5V / Pompe 5V avec diode de protection 1N4007</p>
+
+    <div class="card">
+        <h2>1. Illustration Visuelle Générée</h2>
+        <img src="cablage_nucleo_f401re.jpg" alt="Schéma Fritzing STM32 Nucleo-F401RE">
+    </div>
+
+    <div class="card">
+        <h2>2. Schéma Vectoriel Précis (Broches & Signaux)</h2>
+        <img src="cablage_nucleo_f401re.svg" alt="Schéma SVG haute définition">
+    </div>
+
+    <div class="card">
+        <h2>3. Tableau Récapitulatif des Connexions</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Composant</th>
+                    <th>Broche Composant</th>
+                    <th>Broche Nucleo-F401RE</th>
+                    <th>Couleur Recommandée</th>
+                    <th>Signal / Fonction</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><b>Capteur Humidité Sol</b></td>
+                    <td>VCC</td>
+                    <td><b>3V3</b></td>
+                    <td><span class="badge badge-red">Rouge</span></td>
+                    <td>Alimentation 3.3V</td>
+                </tr>
+                <tr>
+                    <td><b>Capteur Humidité Sol</b></td>
+                    <td>GND</td>
+                    <td><b>GND</b></td>
+                    <td><span class="badge badge-black">Noir</span></td>
+                    <td>Masse commune</td>
+                </tr>
+                <tr>
+                    <td><b>Capteur Humidité Sol</b></td>
+                    <td>AOUT</td>
+                    <td><b>PA0 (A0)</b></td>
+                    <td><span class="badge badge-yellow">Jaune</span></td>
+                    <td>Signal analogique (ADC1_IN0)</td>
+                </tr>
+                <tr>
+                    <td><b>BME280</b></td>
+                    <td>VIN / VCC</td>
+                    <td><b>3V3</b></td>
+                    <td><span class="badge badge-red">Rouge</span></td>
+                    <td>Alimentation 3.3V</td>
+                </tr>
+                <tr>
+                    <td><b>BME280</b></td>
+                    <td>GND</td>
+                    <td><b>GND</b></td>
+                    <td><span class="badge badge-black">Noir</span></td>
+                    <td>Masse commune</td>
+                </tr>
+                <tr>
+                    <td><b>BME280</b></td>
+                    <td>SCL</td>
+                    <td><b>PB8 (D15)</b></td>
+                    <td><span class="badge badge-blue">Bleu</span></td>
+                    <td>Horloge I2C (I2C1_SCL)</td>
+                </tr>
+                <tr>
+                    <td><b>BME280</b></td>
+                    <td>SDA</td>
+                    <td><b>PB9 (D14)</b></td>
+                    <td><span class="badge badge-green">Vert</span></td>
+                    <td>Données I2C (I2C1_SDA)</td>
+                </tr>
+                <tr>
+                    <td><b>Module Relais 5V</b></td>
+                    <td>VCC</td>
+                    <td><b>5V</b></td>
+                    <td><span class="badge badge-red">Rouge</span></td>
+                    <td>Alimentation 5V</td>
+                </tr>
+                <tr>
+                    <td><b>Module Relais 5V</b></td>
+                    <td>GND</td>
+                    <td><b>GND</b></td>
+                    <td><span class="badge badge-black">Noir</span></td>
+                    <td>Masse commune</td>
+                </tr>
+                <tr>
+                    <td><b>Module Relais 5V</b></td>
+                    <td>IN</td>
+                    <td><b>PA4 (A2)</b></td>
+                    <td><span class="badge badge-orange">Orange</span></td>
+                    <td>Signal de commande GPIO</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+*.egg-info/
+
+# STM32CubeIDE / Eclipse
+Debug/
+Release/
+.metadata/
+.settings/
+*.launch
+*.o
+*.d
+*.su
+*.elf
+*.bin
+*.hex
+*.map
+
+# System & Editor
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Large datasets / local logs
+data/sensor_readings.csv
