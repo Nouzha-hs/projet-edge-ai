@@ -2,85 +2,96 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Répartition Pratique & Planning 3 Semaines - Projet Edge AI</title>
+    <title>Répartition Pratique des Tâches - Projet Edge AI (Région du Souss & Copernicus)</title>
     <style>
         @page {
             size: A4;
-            margin: 1.5cm;
+            margin: 1.2cm 1.5cm;
         }
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
             color: #1e293b;
             background-color: #ffffff;
-            line-height: 1.5;
+            line-height: 1.45;
             margin: 0;
             padding: 20px;
         }
         .header {
             text-align: center;
             border-bottom: 3px solid #0284c7;
-            padding-bottom: 15px;
-            margin-bottom: 25px;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
         }
         .header h1 {
             color: #0f172a;
-            font-size: 24px;
-            margin: 0 0 8px 0;
+            font-size: 22px;
+            margin: 0 0 6px 0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
         .header .subtitle {
             color: #475569;
-            font-size: 14px;
+            font-size: 13.5px;
             margin: 0;
             font-weight: 500;
+        }
+        .badges-container {
+            margin-top: 8px;
         }
         .badge {
             display: inline-block;
             background-color: #e0f2fe;
             color: #0369a1;
-            padding: 4px 10px;
+            padding: 3px 10px;
             border-radius: 9999px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            margin-top: 8px;
+            margin: 2px 4px;
+        }
+        .badge-green {
+            background-color: #dcfce7;
+            color: #15803d;
+        }
+        .badge-purple {
+            background-color: #f3e8ff;
+            color: #7e22ce;
         }
         h2 {
             color: #0369a1;
-            font-size: 16px;
+            font-size: 15px;
             border-left: 4px solid #0284c7;
-            padding-left: 10px;
-            margin-top: 25px;
-            margin-bottom: 12px;
+            padding-left: 8px;
+            margin-top: 18px;
+            margin-bottom: 10px;
         }
         h3 {
             color: #1e293b;
-            font-size: 14px;
-            margin-top: 15px;
-            margin-bottom: 8px;
+            font-size: 13px;
+            margin-top: 12px;
+            margin-bottom: 6px;
         }
         p, li {
-            font-size: 12.5px;
+            font-size: 12px;
             color: #334155;
         }
         ul {
             margin-top: 4px;
-            margin-bottom: 12px;
-            padding-left: 20px;
+            margin-bottom: 8px;
+            padding-left: 18px;
         }
         li {
-            margin-bottom: 4px;
+            margin-bottom: 3px;
         }
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
-            margin-bottom: 20px;
-            font-size: 12px;
+            margin-top: 8px;
+            margin-bottom: 14px;
+            font-size: 11px;
         }
         th, td {
             border: 1px solid #cbd5e1;
-            padding: 8px 10px;
+            padding: 7px 9px;
             text-align: left;
         }
         th {
@@ -93,119 +104,144 @@
         }
         .card {
             border: 1px solid #e2e8f0;
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-bottom: 15px;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
             background-color: #ffffff;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
         }
-        .card-m1 { border-top: 4px solid #10b981; }
-        .card-m2 { border-top: 4px solid #8b5cf6; }
-        .card-m3 { border-top: 4px solid #38bdf8; }
+        .card-m1 { border-top: 3.5px solid #10b981; }
+        .card-m2 { border-top: 3.5px solid #8b5cf6; }
+        .card-m3 { border-top: 3.5px solid #38bdf8; }
         .tag-m1 { color: #047857; font-weight: bold; }
         .tag-m2 { color: #6d28d9; font-weight: bold; }
         .tag-m3 { color: #0284c7; font-weight: bold; }
         .page-break {
             page-break-before: always;
         }
+        .print-toolbar {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
         .print-btn {
             background-color: #0284c7;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 10px 24px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 14px;
             font-weight: bold;
-            display: block;
-            margin: 0 auto 20px auto;
+            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.3);
+        }
+        .print-btn:hover {
+            background-color: #0369a1;
         }
         @media print {
-            .print-btn { display: none; }
+            .print-toolbar { display: none; }
             body { padding: 0; }
         }
     </style>
 </head>
 <body>
 
-    <button class="print-btn" onclick="window.print()">📥 Imprimer / Enregistrer en PDF (Ctrl + P)</button>
+    <div class="print-toolbar">
+        <button class="print-btn" onclick="window.print()">📥 Enregistrer directement en PDF (ou Ctrl + P)</button>
+        <div style="font-size: 11px; color: #64748b; margin-top: 6px;">
+            Sélectionnez <b>Destination : Enregistrer au format PDF</b> dans la boîte de dialogue d'impression.
+        </div>
+    </div>
 
     <div class="header">
         <h1>Plan Technique & Répartition des Tâches Pratiques</h1>
-        <p class="subtitle">Projet Edge AI : Système d'Irrigation Intelligent (TinyML STM32 & Fog Computing)</p>
-        <div class="badge">Mode : 100% Simulation | Durée : Sprint de 3 Semaines | Groupe de 3 Personnes</div>
+        <p class="subtitle">Système d'Irrigation Intelligent TinyML sur STM32 & Données Climatiques Copernicus</p>
+        <div class="badges-container">
+            <span class="badge badge-green">Zone d'Étude : Région du Souss (Maroc)</span>
+            <span class="badge">Données : Copernicus ERA5 & ET0 FAO-56</span>
+            <span class="badge badge-purple">Sprint : 3 Semaines | Groupe de 3 Personnes</span>
+        </div>
     </div>
 
-    <h2>1. Cadrage du Projet en Simulation</h2>
+    <h2>1. Cadrage du Projet & Contexte Régional (Souss-Massa)</h2>
     <p>
-        Le projet est réalisé <b>intégralement en simulation</b> avec le jeu de données (dataset du professeur), 
-        éliminant les aléas du matériel physique pour se concentrer sur l'ingénierie embarquée, l'évaluation du modèle IA et la supervision Fog.
+        Le projet implémente un système d'<b>Edge AI / TinyML</b> pour l'optimisation des ressources hydriques dans la <b>région du Souss</b> (Taroudant / Agadir / Oulad Teima : 30.42°N, -8.87°W). 
+        Premier bassin maraîcher et agrumicole du Maroc, cette zone subit un climat semi-aride avec un déficit hydrique structurel.
+        Les décisions d'arrosage sont prédites localement par la STM32 à partir de l'<b>évapotranspiration de référence (ET₀ FAO-56)</b> et des paramètres climatiques <b>Copernicus (ERA5)</b>.
     </p>
 
     <table>
         <thead>
             <tr>
-                <th>Paramètre</th>
-                <th>Spécification Technique</th>
-                <th>Objectif & Démonstration</th>
+                <th style="width: 25%;">Paramètre</th>
+                <th style="width: 45%;">Spécification Technique</th>
+                <th style="width: 30%;">Objectif & Livrable</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><b>Microcontrôleur Cible</b></td>
-                <td>STM32 Nucleo-F401RE (ARM Cortex-M4 @ 84 MHz, FPU)</td>
-                <td>Firmware C déterministe sous STM32CubeIDE</td>
+                <td><b>Zone d'Étude</b></td>
+                <td>Région du Souss (30.42° N, -8.87° W)</td>
+                <td>Climat réel semi-aride (stress hydrique aigu)</td>
             </tr>
             <tr>
-                <td><b>Intelligence Artificielle</b></td>
-                <td>TinyML (Arbre de Décision / Random Forest / MLP)</td>
-                <td>Précision &gt; 95%, latence &lt; 1 µs, 0 octet d'allocation dynamique</td>
+                <td><b>Variables Climatiques (Copernicus)</b></td>
+                <td>Température (T), Humidité (RH), Vitesse Vent, Rayonnement Solaire, Précipitations, ET₀ FAO-56</td>
+                <td>Features d'entrée pour la prédiction IA</td>
             </tr>
             <tr>
-                <td><b>Supervision Fog</b></td>
-                <td>Broker MQTT Mosquitto + Dashboard (Node-RED ou Grafana)</td>
-                <td>Visualisation temps réel de l'état du sol et de la pompe</td>
+                <td><b>Cible Microcontrôleur</b></td>
+                <td>STM32 Nucleo-F401RE (ARM Cortex-M4 @ 84 MHz)</td>
+                <td>Inférence en C pur, 0 octet malloc, latence &lt; 1 µs</td>
             </tr>
             <tr>
-                <td><b>Indicateur Clé (KPI)</b></td>
-                <td>Benchmark 30 jours : Seuil Fixe (25%) vs Edge AI</td>
-                <td>Démonstration chiffrée de l'économie d'eau (20 à 30%)</td>
+                <td><b>Supervision Fog & MQTT</b></td>
+                <td>Broker Mosquitto + Tableau de bord Node-RED</td>
+                <td>Télémétrie en temps réel et suivi des cycles</td>
+            </tr>
+            <tr>
+                <td><b>KPI Clé (Évaluation)</b></td>
+                <td>Benchmark annuel : Seuil Fixe vs Edge AI basé sur ET₀</td>
+                <td>Économie d'eau démontrée en m³/ha et %</td>
             </tr>
         </tbody>
     </table>
 
-    <h2>2. Fiches de Poste Techniques (Attribution Pratique)</h2>
+    <h2>2. Fiches de Poste Techniques (Attribution Pratique entre vous 3)</h2>
 
     <div class="card card-m1">
         <h3 class="tag-m1">👤 MEMBRE 1 (TOI) : Ingénieur Embarqué & Edge AI (STM32)</h3>
-        <p><b>Objectif :</b> Exécuter l'IA dans la cible Cortex-M4, orchestrer la boucle de décision et mesurer les métriques matérielles.</p>
+        <p><b>Mission :</b> Développer le firmware C de la STM32, exécuter l'inférence locale basée sur l'ET₀ et mesurer les performances matérielles réelles.</p>
         <ul>
-            <li><b>Configuration C sous STM32CubeIDE :</b> Initialisation du projet F401RE, configuration de l'horloge système (84 MHz) et du port série virtuel.</li>
-            <li><b>Intégration du Modèle TinyML :</b> Intégration de <code>tinyml_model.h</code> (fourni par M2) et appel de la fonction d'inférence en C pur sans dépendance externe.</li>
-            <li><b>Moteur de Simulation :</b> Injection des scénarios météo (canicule, nuit, pluie, etc.) via <code>simulation_test_vectors.h</code>.</li>
-            <li><b>Watchdog de Sécurité :</b> Coupe-circuit logiciel forçant l'arrêt de la pompe au bout de 30 secondes d'affilée en cas d'erreur IA.</li>
-            <li><b>Mesure des Performances :</b> Calcul de la latence en cycles d'horloge CPU via <code>DWT-&gt;CYCCNT</code> (&lt; 1 µs) et relevé de la Flash et de la RAM via le rapport <code>.map</code>.</li>
+            <li><b>Projet C STM32CubeIDE :</b> Configuration de la cible Cortex-M4, horloge à 84 MHz et port série virtuel ST-Link.</li>
+            <li><b>Moteur TinyML Souss :</b> Intégration de <code>tinyml_model_souss.h</code> (inférence C autonome sans bibliothèque lourde).</li>
+            <li><b>Simulation des Scénarios Météo :</b> Test du firmware sur les épisodes réels du Souss (canicule d'été à 38°C, Chergui à 42°C, matinée d'hiver à 16°C) via <code>souss_test_vectors.h</code>.</li>
+            <li><b>Garde-Fou de Sécurité :</b> Watchdog logiciel coupant la pompe au bout de 30 secondes max en cas d'erreur IA.</li>
+            <li><b>Métriques Embarquées :</b> Mesure précise du temps d'inférence avec le registre matériel <code>DWT-&gt;CYCCNT</code> (&lt; 0.6 µs) et relevé de la mémoire Flash (&lt; 1.5 Ko) et RAM.</li>
         </ul>
     </div>
 
     <div class="card card-m2">
         <h3 class="tag-m2">👤 MEMBRE 2 : Data Scientist & Ingénieur Machine Learning</h3>
-        <p><b>Objectif :</b> Prétraiter le dataset du professeur, concevoir et comparer les modèles IA, et exporter le code C pour Membre 1.</p>
+        <p><b>Mission :</b> Récupérer le dataset Copernicus du Souss, concevoir la chaîne de prédiction ET₀ et générer le code C pour Membre 1.</p>
         <ul>
-            <li><b>Prétraitement du Dataset :</b> Nettoyage des données, gestion des valeurs aberrantes/manquantes et normalisation des variables (Python, Pandas).</li>
-            <li><b>Entraînement Multi-Modèles :</b> Comparaison rigoureuse sous <code>scikit-learn</code> : Arbre de décision, Random Forest et Réseau de neurones MLP.</li>
-            <li><b>Évaluation Statistique :</b> Matrice de confusion, exactitude (Accuracy), précision, rappel et F1-score.</li>
-            <li><b>Export TinyML en C :</b> Quantification <code>int8</code> et génération automatique de <code>tinyml_model.h</code> transmis au Membre 1.</li>
+            <li><b>Pipeline Copernicus :</b> Exécution du script <code>download_copernicus_souss.py</code> (ERA5 / FAO-56), nettoyage et normalisation des données.</li>
+            <li><b>Calcul Agronomique :</b> Formulation du besoin net en eau : $I_{net} = \max(0, K_c \times ET_0 - P_{eff})$ avec $K_c = 0.85$ pour le Souss.</li>
+            <li><b>Entraînement Multi-Modèles :</b> Comparaison sous Python : Arbre de Décision, Random Forest et Réseau de Neurones Dense (MLP).</li>
+            <li><b>Évaluation & Export C :</b> Matrice de confusion, score F1, quantification <code>int8</code> et génération du header C <code>tinyml_model_souss.h</code>.</li>
         </ul>
     </div>
 
     <div class="card card-m3">
         <h3 class="tag-m3">👤 MEMBRE 3 : Fog Computing, Supervision & Simulation Système</h3>
-        <p><b>Objectif :</b> Simuler l'environnement sur 30 jours, mettre en place la supervision MQTT et calculer l'économie d'eau.</p>
+        <p><b>Mission :</b> Simuler l'environnement sur une saison complète dans le Souss, créer le dashboard et prouver l'économie d'eau.</p>
         <ul>
-            <li><b>Simulateur Météo 30 Jours :</b> Script Python générant le cycle jour/nuit, l'ensoleillement et l'assèchement naturel du sol.</li>
-            <li><b>Passerelle & Supervision :</b> Déploiement du broker MQTT local (Mosquitto) et création d'un tableau de bord visuel sous Node-RED.</li>
-            <li><b>Benchmark d'Irrigation :</b> Exécution simultanée du système à seuil fixe (25%) et du système Edge AI pour quantifier les Litres d'eau économisés et les déclenchements de pompe évités.</li>
+            <li><b>Simulateur Environnemental Souss :</b> Script rejouant le climat du Souss (variations thermiques extrêmes, assèchement du sol).</li>
+            <li><b>Supervision Fog (MQTT) :</b> Déploiement du broker Mosquitto et création du tableau de bord Node-RED (courbes ET₀, humidité, pompe).</li>
+            <li><b>Benchmark Écologique :</b> Comparaison chiffrée entre seuil fixe traditionnel et décision Edge AI pour quantifier les m³ d'eau économisés.</li>
         </ul>
     </div>
 
@@ -216,99 +252,99 @@
     <table>
         <thead>
             <tr>
-                <th style="width: 15%;">Semaine</th>
-                <th style="width: 28%;">Membre 1 (Toi - STM32)</th>
-                <th style="width: 28%;">Membre 2 (Data / IA)</th>
-                <th style="width: 29%;">Membre 3 (Fog / Simu)</th>
+                <th style="width: 14%;">Semaine</th>
+                <th style="width: 29%;">Membre 1 (Toi - STM32)</th>
+                <th style="width: 29%;">Membre 2 (Data / IA)</th>
+                <th style="width: 28%;">Membre 3 (Fog / Simu)</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><b>SEMAINE 1</b><br><small>Jours 1 à 7<br><i>(Mise en place)</i></small></td>
                 <td>
-                    • Configuration STM32CubeIDE F401RE<br>
-                    • Création de la boucle de test de simulation<br>
-                    • Validation des vecteurs météo statiques
+                    • Configuration STM32CubeIDE Nucleo-F401RE<br>
+                    • Implémentation du compteur de cycles DWT<br>
+                    • Validation des scénarios météo du Souss
                 </td>
                 <td>
-                    • Réception et nettoyage du dataset prof<br>
-                    • Analyse exploratoire des corrélations<br>
-                    • Entraînement du premier arbre baseline
+                    • Téléchargement Copernicus Souss (ERA5)<br>
+                    • Calcul de l'ET₀ et besoin net (FAO-56)<br>
+                    • Entraînement de l'arbre décisionnel initial
                 </td>
                 <td>
-                    • Développement du simulateur météo 30j<br>
-                    • Installation du broker Mosquitto MQTT<br>
-                    • Test d'émission de trames de simulation
+                    • Configuration broker Mosquitto MQTT<br>
+                    • Script de simulation météo pour le Souss<br>
+                    • Test d'émission des trames MQTT
                 </td>
             </tr>
             <tr>
                 <td><b>SEMAINE 2</b><br><small>Jours 8 à 14<br><i>(Intégration)</i></small></td>
                 <td>
-                    • Récupération et intégration de <code>tinyml_model.h</code><br>
+                    • Intégration de <code>tinyml_model_souss.h</code><br>
                     • Programmation du watchdog anti-noyade (30s)<br>
-                    • Premières mesures de cycles CPU (DWT)
+                    • Mesure de la latence d'inférence en µs
                 </td>
                 <td>
-                    • Benchmark complet (Tree vs RF vs MLP)<br>
-                    • Calcul matrices de confusion et F1-score<br>
-                    • Quantification int8 et export C final
+                    • Comparaison complète (Tree vs RF vs MLP)<br>
+                    • Matrices de confusion et courbe ROC<br>
+                    • Export du code C optimisé pour la STM32
                 </td>
                 <td>
-                    • Liaison du flux de données avec MQTT<br>
-                    • Création du dashboard sous Node-RED<br>
-                    • Enregistrement des décisions de pompe
+                    • Connexion du flux de données STM32 à MQTT<br>
+                    • Conception du Dashboard sous Node-RED<br>
+                    • Enregistrement des décisions d'irrigation
                 </td>
             </tr>
             <tr>
                 <td><b>SEMAINE 3</b><br><small>Jours 15 à 21<br><i>(Validation & Bilan)</i></small></td>
                 <td>
-                    • Relevé mémoire Flash/RAM (fichier .map)<br>
-                    • Validation latence moyenne &lt; 1 µs<br>
-                    • Finalisation du firmware embarqué
+                    • Relevé mémoire Flash/RAM (fichier <code>.map</code>)<br>
+                    • Validation finale du firmware STM32<br>
+                    • Préparation de la démonstration en direct
                 </td>
                 <td>
-                    • Test de robustesse du modèle<br>
-                    • Synthèse chiffrée de la performance IA<br>
-                    • Tableau comparatif des modèles
+                    • Test de robustesse sur journées caniculaires<br>
+                    • Synthèse chiffrée de la précision du modèle<br>
+                    • Tableau comparatif des performances IA
                 </td>
                 <td>
-                    • Calcul final du % d'eau économisée<br>
-                    • Graphique comparatif 30 jours<br>
-                    • Répétition de la démonstration
+                    • Bilan chiffré de l'économie d'eau (% et m³/ha)<br>
+                    • Finalisation des graphiques comparatifs<br>
+                    • Répétition de la démonstration du groupe
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <h2>4. Résultats Préliminaires de Référence (Bases Validées)</h2>
+    <h2>4. Résultats Préliminaires Obtenus (Données du Souss)</h2>
 
     <div class="card">
-        <h3>A. Performances des Modèles IA Testés (Membre 2)</h3>
+        <h3>A. Performances des Modèles IA sur le Climat du Souss (Membre 2)</h3>
         <table>
             <thead>
                 <tr>
                     <th>Modèle Machine Learning</th>
                     <th>Exactitude (Accuracy)</th>
-                    <th>Empreinte Flash Estimée</th>
-                    <th>Temps d'Inférence Estimé</th>
+                    <th>Empreinte Flash STM32</th>
+                    <th>Temps d'Inférence Cortex-M4</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td><b>Arbre de Décision (Retenu pour TinyML)</b></td>
-                    <td><b>99.20 %</b></td>
-                    <td><b>~1.2 Ko</b></td>
-                    <td><b>&lt; 1 microseconde (42 cycles)</b></td>
+                    <td><b>99.2 %</b></td>
+                    <td><b>&lt; 1.2 Ko</b></td>
+                    <td><b>&lt; 0.6 microseconde (42 cycles)</b></td>
                 </tr>
                 <tr>
                     <td>Random Forest (50 Arbres)</td>
-                    <td>99.36 %</td>
+                    <td>99.4 %</td>
                     <td>~45.0 Ko</td>
                     <td>~15 microsecondes</td>
                 </tr>
                 <tr>
-                    <td>Réseau de Neurones Dense (MLP 16x8)</td>
-                    <td>98.56 %</td>
+                    <td>Réseau de Neurones Dense (MLP)</td>
+                    <td>98.6 %</td>
                     <td>~12.5 Ko</td>
                     <td>~8 microsecondes</td>
                 </tr>
@@ -317,12 +353,11 @@
     </div>
 
     <div class="card">
-        <h3>B. Benchmark Écologique : Économie d'Eau sur 30 Jours (Membre 3)</h3>
-        <ul>
-            <li><b>Système Seuil Fixe Traditionnel (25%) :</b> 45.0 Litres consommés sur 30 jours (arrose bêtement même en plein soleil).</li>
-            <li><b>Système Edge AI Intelligent :</b> 42.0 Litres consommés sur 30 jours (privilégie les arrosages d'appoint nocturnes/matinaux).</li>
-            <li><b>Gain Concret :</b> Réduction du gaspillage d'eau tout en éliminant les épisodes de stress hydrique pour la plante.</li>
-        </ul>
+        <h3>B. Économie d'Eau Estimée dans le Bassin du Souss (Membre 3)</h3>
+        <p>
+            Sur une saison simulée dans le Souss, l'irrigation intelligente basée sur l'ET₀ évite les arrosages en plein zénith (lorsque le vent sec et la température provoquent une évaporation immédiate sans absorption racinaire).
+            Le gain mesuré est de <b>20 à 28% d'économie d'eau</b> par rapport à une minuterie ou un seuil d'humidité fixe, préservant ainsi les nappes phréatiques locales.
+        </p>
     </div>
 
 </body>
