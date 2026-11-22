@@ -1,8 +1,7 @@
 /**
  * @file tinyml_model_souss.h
- * @brief Modèle d'Inférence TinyML pour la région du Souss (Maroc)
- * @details Conçu pour STM32 Nucleo-F401RE (Cortex-M4 @ 84 MHz)
- *          Variables d'entrée Copernicus : Température, Humidité, Vent, Rayonnement, ET0
+ * @brief Modèle TinyML pour la région du SOUSS (Données Copernicus ERA5 / FAO-56)
+ * @details Généré pour STM32 Nucleo-F401RE (0 allocation dynamique, exécution < 1 µs)
  */
 
 #ifndef TINYML_MODEL_SOUSS_H_
@@ -11,37 +10,44 @@
 #include <stdint.h>
 
 /**
- * @brief Prédit si l'irrigation est requise dans le Souss
- * @param temp_mean_c Température moyenne (°C)
- * @param humidity_mean_pct Humidité relative moyenne (%)
- * @param wind_speed_max_ms Vitesse max du vent (m/s)
- * @param solar_radiation_mj Rayonnement solaire incident (MJ/m²)
- * @param et0_fao_mm Évapotranspiration de référence FAO-56 (mm/jour)
- * @return uint8_t 1 = Activer l'arrosage, 0 = Pas d'arrosage
+ * Prédit le besoin d'arrosage dans la région du Souss
+ * @param temp_mean_c
+ * @param humidity_mean_pct
+ * @param wind_speed_max_ms
+ * @param solar_radiation_mj
+ * @param et0_fao_mm
+ * @return uint8_t 1 = Arrosage Requis, 0 = Pas d'arrosage
  */
-static inline uint8_t tinyml_predict_souss_irrigation(
-    float temp_mean_c,
-    float humidity_mean_pct,
-    float wind_speed_max_ms,
-    float solar_radiation_mj,
-    float et0_fao_mm
-) {
-    /* 1. Faible demande évaporative (Hiver / Temps pluvieux) */
-    if (et0_fao_mm <= 2.35f) {
-        return 0; /* Pas d'arrosage nécessaire */
+static inline uint8_t tinyml_predict_souss_irrigation(float temp_mean_c, float humidity_mean_pct, float wind_speed_max_ms, float solar_radiation_mj, float et0_fao_mm) {
+    if (et0_fao_mm <= 2.5950f) {
+        if (humidity_mean_pct <= 71.5000f) {
+            return 1;
+        } else {
+            return 0;
+        }
+    } else {
+        if (wind_speed_max_ms <= 28.3500f) {
+            if (humidity_mean_pct <= 76.0000f) {
+                if (temp_mean_c <= 16.0500f) {
+                    return 1;
+                } else {
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
+        } else {
+            if (et0_fao_mm <= 4.6300f) {
+                return 0;
+            } else {
+                if (wind_speed_max_ms <= 31.8500f) {
+                    return 1;
+                } else {
+                    return 1;
+                }
+            }
+        }
     }
-
-    /* 2. Forte demande évaporative (Été / Chaleur / Chergui) */
-    if (et0_fao_mm >= 3.80f) {
-        return 1; /* Arrosage indispensable */
-    }
-
-    /* 3. Zone intermédiaire (Printemps / Automne : ET0 entre 2.35 et 3.80 mm/j) */
-    if (humidity_mean_pct <= 55.0f || temp_mean_c >= 22.0f) {
-        return 1; /* Air sec ou température montante : arrosage d'appoint */
-    }
-
-    return 0; /* Humidité suffisante pour temporiser */
 }
 
 #endif /* TINYML_MODEL_SOUSS_H_ */
