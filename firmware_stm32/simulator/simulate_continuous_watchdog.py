@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Étape 2 : Simulation Continue & Test du Watchdog de Sécurité (Membre 1).
-Exécute le firmware STM32 sur 730 jours de données réelles Copernicus du Souss
+Exécute le firmware STM32 sur 731 jours de données Copernicus du Souss
 et injecte une panne de capteur pour valider le coupe-circuit anti-inondation.
 """
 
@@ -26,13 +26,13 @@ def tinyml_predict_souss(temp, humidity, wind, solar, et0):
 def run_continuous_simulation():
     print("=" * 80)
     print("   ÉTAPE 2 : SIMULATION CONTINUE & TEST DU WATCHDOG DE SÉCURITÉ STM32")
-    print("   Cible : ARM Cortex-M4 @ 84 MHz | Données : Copernicus Souss (730 Jours)")
+    print("   Cible : ARM Cortex-M4 @ 84 MHz | Données : Copernicus Souss (731 Jours)")
     print("=" * 80)
     print()
 
-    # Si le dataset Copernicus n'est pas encore téléchargé, on le génère automatiquement
-    if not os.path.exists(DATA_PATH):
-        print("[INFO] Téléchargement initial des données Copernicus Souss...")
+    # Si le fichier CSV n'existe pas ou est vide, on appelle le générateur
+    if not os.path.exists(DATA_PATH) or os.path.getsize(DATA_PATH) < 100:
+        print("[INFO] Préparation automatique du dataset Copernicus Souss...")
         sys.path.append(os.path.join(os.path.dirname(__file__), "..", "..", "data"))
         from download_copernicus_souss import fetch_souss_copernicus_data
         df = fetch_souss_copernicus_data()
@@ -41,13 +41,11 @@ def run_continuous_simulation():
 
     print(f"Chargement de {len(df)} jours de relevés climatiques réels du Souss (2023-2024).\n")
 
-    # Variables de suivi de l'état du microcontrôleur
     pump_active_days = 0
     pump_idle_days = 0
     watchdog_trigger_count = 0
     
     # Injection d'un bug / panne de capteur au jour 200 (19 Juillet 2023 - Plein été)
-    # Le capteur reste bloqué à 48°C et demande d'arroser en continu !
     FAULT_INJECTION_DAY = 200
 
     print(">>> Exécution de la boucle principale du firmware STM32...\n")
@@ -61,7 +59,7 @@ def run_continuous_simulation():
         solar = row["solar_radiation_mj"]
         et0 = row["et0_fao_mm"]
 
-        # Simulation de la panne de capteur
+        # Simulation de la panne de capteur au jour 200
         is_sensor_fault = (day_idx == FAULT_INJECTION_DAY)
         if is_sensor_fault:
             temp = 48.0 # Capteur défaillant bloqué à 48°C
@@ -73,7 +71,6 @@ def run_continuous_simulation():
         # Logique de sécurité Watchdog (Max 30 secondes d'affilée)
         watchdog_alert = False
         if is_sensor_fault and decision == 1:
-            # L'IA demande d'arroser sans arrêt -> Le watchdog matériel coupe la pompe au bout de 30s !
             watchdog_alert = True
             watchdog_trigger_count += 1
 
