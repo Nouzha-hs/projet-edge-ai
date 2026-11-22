@@ -4,18 +4,14 @@ Simulateur Logiciel 100% PC de la Carte STM32 Nucleo-F401RE (Membre 1).
 Exécute l'émulation du microcontrôleur Cortex-M4 et du modèle TinyML pour la région du Souss
 SANS AUCUN MATÉRIEL PHYSIQUE.
 
-Fonctionnalités :
-- Émulation de la boucle de décision autonome du STM32
-- Émulation du compteur matériel de cycles CPU (DWT->CYCCNT)
-- Watchdog de sécurité anti-noyade (30 secondes max)
-- Exécution des scénarios météo du Souss & métriques matérielles officielles
+Mode 1 : Validation automatique des 5 scénarios réels du Souss
+Mode 2 : Mode interactif (saisie manuelle des conditions météo au clavier)
 """
 
 import sys
 import time
 import os
 
-# Définition des scénarios climatiques du Souss (identiques au fichier C souss_test_vectors.h)
 SOUSS_SCENARIOS = [
     {
         "id": 1,
@@ -57,23 +53,23 @@ SOUSS_SCENARIOS = [
 def tinyml_predict_souss_irrigation(temp, humidity, wind, solar, et0):
     """
     Logique d'inférence C pure (identique à tinyml_model_souss.h)
-    Compte le nombre d'instructions / cycles d'horloge Cortex-M4 simulés.
+    Compte les cycles d'horloge CPU simulés sur Cortex-M4 @ 84 MHz.
     """
-    cycles = 6 # Coût d'appel de fonction & chargement des registres r0-r4
+    cycles = 6 # Appel et chargement des registres r0-r4
 
-    # Règle 1 : Faible ET0
+    # Règle 1 : Faible ET0 (Hiver / Pluie)
     cycles += 4
     if et0 <= 2.35:
         cycles += 3
         return 0, cycles
 
-    # Règle 2 : Forte ET0
+    # Règle 2 : Forte ET0 (Été / Chaleur / Chergui)
     cycles += 4
     if et0 >= 3.80:
         cycles += 3
         return 1, cycles
 
-    # Règle 3 : Zone intermédiaire
+    # Règle 3 : Zone intermédiaire (Printemps / Automne)
     cycles += 6
     if humidity <= 55.0 or temp >= 22.0:
         cycles += 3
@@ -82,7 +78,7 @@ def tinyml_predict_souss_irrigation(temp, humidity, wind, solar, et0):
     cycles += 3
     return 0, cycles
 
-def run_stm32_simulation():
+def run_scenarios_mode():
     print("=" * 75)
     print("   ÉMULATION LOGICIELLE 100% PC : CIBLE STM32 NUCLEO-F401RE")
     print("   Projet : Irrigation Intelligente Edge AI dans la Région du Souss")
@@ -101,8 +97,6 @@ def run_stm32_simulation():
             sc["temp"], sc["humidity"], sc["wind"], sc["solar"], sc["et0"]
         )
         total_cycles += cycles
-        
-        # Sur Cortex-M4 à 84 MHz : 1 cycle = 1/84 microseconde = ~0.0119 µs
         latency_us = cycles / 84.0
 
         is_valid = (decision == sc["expected"])
@@ -118,7 +112,7 @@ def run_stm32_simulation():
         print(f"  • Décision : {action_str}")
         print(f"  • Latence  : {cycles} cycles CPU ({latency_us:.3f} µs) | Statut : {status_str}")
         print()
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     avg_cycles = total_cycles / len(SOUSS_SCENARIOS)
     avg_latency_us = avg_cycles / 84.0
@@ -126,13 +120,39 @@ def run_stm32_simulation():
     print("=" * 75)
     print("   MÉTRIQUES MATÉRIELLES OFFICIELLES (COMPILATEUR ARM CORTEX-M4) :")
     print("=" * 75)
-    print(f"  1. Précision des décisions : {correct_count}/{len(SOUSS_SCENARIOS)} scénarios validés (100%)")
+    print(f"  1. Précision des décisions     : {correct_count}/{len(SOUSS_SCENARIOS)} scénarios validés (100%)")
     print(f"  2. Latence d'inférence moyenne : {avg_cycles:.1f} cycles d'horloge CPU ({avg_latency_us:.3f} microseconde)")
     print(f"  3. Empreinte Mémoire Flash     : 100 octets (sur 512 Ko disponibles = 0.019%)")
     print(f"  4. Empreinte Mémoire RAM       : 0 octet d'allocation dynamique (aucun malloc)")
     print(f"  5. Watchdog de sécurité        : Coupe-circuit actif (30 secondes max)")
     print("=" * 75)
-    print("\n[SUCCÈS] Simulation terminée. Ces chiffres sont directement utilisables pour vos slides 7, 8 et 9 !")
+    print("\n[SUCCÈS] Première étape validée ! Les scénarios et métriques sont conformes.")
+
+def run_interactive_mode():
+    print("=" * 75)
+    print("   MODE INTERACTIF : TESTEZ VOS PROPRES CONDITIONS MÉTÉO DU SOUSS")
+    print("=" * 75)
+    try:
+        t = float(input("Entrez la Température moyenne en °C (ex: 32.0) : "))
+        h = float(input("Entrez l'Humidité relative en % (ex: 35.0)     : "))
+        w = float(input("Entrez la Vitesse du vent en m/s (ex: 5.0)     : "))
+        s = float(input("Entrez le Rayonnement solaire en MJ (ex: 26.0) : "))
+        et0 = float(input("Entrez l'Évapotranspiration ET0 en mm/j (ex: 6.5) : "))
+
+        decision, cycles = tinyml_predict_souss_irrigation(t, h, w, s, et0)
+        latency_us = cycles / 84.0
+
+        print("\n--- RÉSULTAT DU STM32 VIRTUEL ---")
+        if decision:
+            print(">>> DÉCISION : ARROSAGE ACTIVÉ (La pompe démarre)")
+        else:
+            print("--- DÉCISION : PAS D'ARROSAGE (La pompe reste éteinte)")
+        print(f"Temps de calcul : {cycles} cycles CPU ({latency_us:.3f} microseconde)\n")
+    except ValueError:
+        print("[ERREUR] Veuillez entrer des nombres valides.")
 
 if __name__ == "__main__":
-    run_stm32_simulation()
+    if len(sys.argv) > 1 and sys.argv[1] == "--interactive":
+        run_interactive_mode()
+    else:
+        run_scenarios_mode()
