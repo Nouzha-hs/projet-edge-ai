@@ -1,0 +1,17 @@
+﻿hypothese;indicateur;A_seuil_fixe;B_edge_ai
+avec_pertes;Eau pompee (m3/ha);6020;5120
+avec_pertes;dont pertes (m3/ha);1081;215
+avec_pertes;Drainage >100 % (m3/ha);0;0
+avec_pertes;Heures de pompe;150;128
+avec_pertes;Humidite moyenne (%);36.5;38.1
+avec_pertes;Humidite finale (%);40.8;34.0
+avec_pertes;Temps en stress (<20 %) (%);0.0;0.0
+avec_pertes;Economie d'eau (%);;15.0
+sans_pertes;Eau pompee (m3/ha);4940;4900
+sans_pertes;dont pertes (m3/ha);0;0
+sans_pertes;Drainage >100 % (m3/ha);0;0
+sans_pertes;Heures de pompe;124;122
+sans_pertes;Humidite moyenne (%);36.4;37.9
+sans_pertes;Humidite finale (%);41.1;33.1
+sans_pertes;Temps en stress (<20 %) (%);0.0;0.0
+sans_pertes;Economie d'eau (%);;0.8
