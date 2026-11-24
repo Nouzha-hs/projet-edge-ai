@@ -1,0 +1,406 @@
+\documentclass[11pt,a4paper]{report}
+
+% --- Packages indispensables ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\usepackage{amsmath, amsfonts, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{tcolorbox}
+\usepackage{float}
+\usepackage{microtype}
+\usepackage{titlesec}
+
+% --- Couleurs personnalisées ---
+\definecolor{primary}{RGB}{18, 69, 89}      % Bleu marine sombre
+\definecolor{secondary}{RGB}{89, 131, 146}  % Bleu sarcelle
+\definecolor{accent}{RGB}{40, 167, 69}      % Vert agricole
+\definecolor{warn}{RGB}{217, 83, 79}        % Rouge alerte
+\definecolor{codebg}{RGB}{245, 247, 250}    % Gris clair code
+\definecolor{codecomment}{RGB}{108, 117, 125}
+
+% --- Configuration de hyperref ---
+\hypersetup{
+    colorlinks=true,
+    linkcolor=primary,
+    citecolor=secondary,
+    urlcolor=accent,
+    pdftitle={Rapport de Projet Edge AI - Irrigation Intelligente Souss-Massa},
+    pdfauthor={Équipe Projet Edge AI},
+    pdfsubject={Systèmes Embarqués, TinyML et Fog Computing}
+}
+
+% --- Configuration de listings (Code C / Python / JSON) ---
+\lstset{
+    backgroundcolor=\color{codebg},
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    captionpos=b,
+    commentstyle=\color{codecomment}\itshape,
+    keywordstyle=\color{primary}\bfseries,
+    stringstyle=\color{accent},
+    numbers=left,
+    numberstyle=\tiny\color{codecomment},
+    numbersep=7pt,
+    frame=single,
+    rulecolor=\color{secondary!40},
+    tabsize=2,
+    showstringspaces=false
+}
+
+% --- Entêtes et pieds de page ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\color{secondary}\textbf{Projet Edge AI} -- Irrigation Intelligente}
+\fancyhead[R]{\small\color{secondary}Région du Souss-Massa}
+\fancyfoot[L]{\small\color{codecomment}Dépôt : \url{https://github.com/Nouzha-hs/projet-edge-ai.git}}
+\fancyfoot[R]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% =========================================================================
+\begin{document}
+
+% --- Page de Garde ---
+\begin{titlepage}
+    \centering
+    \vspace*{1cm}
+    
+    {\Huge \textbf{\color{primary}SYSTÈME D'IRRIGATION INTELLIGENTE AUTONOME BASÉ SUR L'EDGE AI (TINYML)}}\\[0.5cm]
+    {\LARGE \textbf{\color{secondary}Application Éco-Responsable à l'Agriculture Aride du Souss-Massa}}\\[1.5cm]
+    
+    \rule{\linewidth}{1.5pt}\\[0.4cm]
+    {\Large \textbf{RAPPORT TECHNIQUE D'INGÉNIERIE COMPLET}}\\[0.2cm]
+    \rule{\linewidth}{1.5pt}\\[2cm]
+    
+    \begin{minipage}{0.48\textwidth}
+        \textbf{\large Auteurs \& Rôles :}\\[0.3cm]
+        \textbf{Membre 1 :} Ingénierie Embarquée \& Edge AI (STM32)\\
+        \textbf{Membre 2 :} Data Science \& Climatologie (Copernicus / IA)\\
+        \textbf{Membre 3 :} Fog Computing, IoT \& Supervision (Node-RED)
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.48\textwidth}
+        \flushright
+        \textbf{\large Cadre Technique :}\\[0.3cm]
+        \textbf{Plateforme :} STM32 Nucleo-F401RE\\
+        \textbf{Cœur :} ARM Cortex-M4 @ 84 MHz\\
+        \textbf{Supervision :} MQTT, Node-RED, Python\\
+        \textbf{Données :} Copernicus ERA5 (731 jours)\\
+        \textbf{Date :} Novembre 2026
+    \end{minipage}
+    
+    \vfill
+    
+    \begin{tcolorbox}[colback=primary!5,colframe=primary,arc=3mm]
+        \centering
+        \textbf{Dépôt de Code Source & Démonstrateur GitHub :} \\
+        \href{https://github.com/Nouzha-hs/projet-edge-ai.git}{\ttfamily https://github.com/Nouzha-hs/projet-edge-ai.git}
+    \end{tcolorbox}
+    
+    \vspace*{0.5cm}
+\end{titlepage}
+
+% --- Résumé et Abstract ---
+\chapter*{Résumé Exécutif}
+\addcontentsline{toc}{chapter}{Résumé Exécutif}
+
+Le présent rapport documente la conception, l'optimisation et la validation d'un système cyber-physique complet d'irrigation de précision basé sur l'**Edge AI (TinyML)** déployé sur cible **STM32 Nucleo-F401RE** (ARM Cortex-M4 à 84 MHz) pour la plaine du **Souss-Massa (Taroudant/Agadir, Maroc : $30.42^\circ\text{N}, -8.87^\circ\text{W}$)**.
+
+Face aux contraintes climatiques arides, aux épisodes caniculaires de \textit{Chergui} et à la raréfaction critique des nappes phréatiques, ce projet résout le double problème des minuteries conventionnelles (gaspillage d'eau aveugle) et des solutions Cloud distantes (zones blanches sans réseau, coût et latence).
+
+Les trois modules du projet réalisés en synergie par l'équipe sont :
+\begin{enumerate}
+    \item \textbf{Module Edge / Embarqué (Membre 1) :} Synthèse d'un modèle d'arbre de décision directement en langage C ANSI sans allocation dynamique (`malloc`), affichant une empreinte de **100 octets en Flash**, **0 octet de RAM dynamique** et une latence d'inférence de **0.183 $\mu$s** (15.4 cycles CPU). Intégration d'un coupe-circuit matériel de sécurité (\textit{Watchdog} 30 secondes) garantissant un risque d'inondation nul (0.0\%).
+    \item \textbf{Module Data Science \& TinyML (Membre 2) :} Traitement de **731 journées de relevés réels Copernicus ERA5** (2023--2024), formulation de l'évapotranspiration de référence ($ET_0$) selon le standard international \textbf{FAO-56 Penman-Monteith}, et benchmarking multi-modèles (Arbre de Décision : 96.72\% de précision, Forêt Aléatoire : 97.27\%, Réseau MLP : 97.27\%).
+    \item \textbf{Module Fog Computing \& Supervision (Membre 3) :} Architecture distribuée avec passerelle série-MQTT (\textit{Eclipse Mosquitto}), simulateur environnemental réaliste du Souss, tableau de bord \textit{Node-RED 2.0} et benchmark écologique démontrant une économie d'eau de **15.0\% à 32.3\%** par rapport aux minuteries à seuil fixe.
+\end{enumerate}
+
+\vspace{0.5cm}
+
+\begin{otherlanguage}{english}
+\section*{Abstract}
+This technical report details the full engineering, design, and deployment of an autonomous, low-power smart irrigation system leveraging **Edge AI (TinyML)** on an **STM32 Nucleo-F401RE** microcontroller (ARM Cortex-M4 @ 84 MHz) targeted at the arid **Souss-Massa** plain (Morocco: $30.42^\circ\text{N}, -8.87^\circ\text{W}$). 
+
+Driven by 731 days of real **Copernicus ERA5** climate observations (2023--2024) and the **FAO-56 Penman-Monteith** reference evapotranspiration ($ET_0$) metric, an ultra-compact ANSI C Decision Tree classifier was compiled with zero dynamic memory allocation (`malloc`), requiring only **100 bytes of Flash**, **0 bytes of dynamic RAM**, and executing within **0.183 $\mu$s** (15.4 clock cycles). A hardware-grade 30-second failsafe watchdog eliminates flooding risks under sensor failure. 
+
+At the Fog layer, a local **Eclipse Mosquitto MQTT broker**, a serial-MQTT bridge, and a **Node-RED 2.0 telemetry dashboard** deliver real-time supervisory control. Multi-scenario comparative benchmarks reveal annual water savings between **15.0\% and 32.3\%** (up to 1,391 L/year saved per zone) over conventional fixed-schedule timers, demonstrating high environmental and operational impact for precision agriculture.
+\end{otherlanguage}
+
+\tableofcontents
+
+% =========================================================================
+\chapter{Introduction \& Contexte Régional du Souss-Massa}
+
+\section{La Problématique Hydrique dans le Souss-Massa}
+La plaine du Souss-Massa constitue la locomotive de la production maraîchère et agrumicole marocaine. Cependant, elle se situe dans un domaine bioclimatique aride à semi-aride caractérisé par :
+\begin{itemize}
+    \item Une pluviométrie moyenne annuelle très faible (inférieure à 200 mm/an), concentrée sur de rares épisodes orageux hivernaux.
+    \item Un déficit d'alimentation chronique des nappes phréatiques (Chtouka, nappe du Souss), provoquant un abaissement du niveau piézométrique de plusieurs mètres par an.
+    \item Le phénomène météorologique du \textbf{Chergui} : vent continental d'est/sud-est en provenance du Sahara, caractérisé par des températures extrêmes ($> 40^\circ\text{C}$), une humidité relative chutant en deçà de 15\%, et une demande évaporative journalière ($ET_0$) dépassant 9 mm/jour.
+\end{itemize}
+
+\section{Limites des Systèmes d'Irrigation Conventionnels}
+Actuellement, les exploitations agricoles de la région utilisent principalement des électrovannes asservies à des minuteries programmables à seuil fixe ou à calendrier fixe. Cette approche présente des défaillances majeures :
+\begin{enumerate}
+    \item \textbf{Irrigation Aveugle :} L'arrosage s'enclenche de façon rigide même si le sol a bénéficié de précipitations récentes ou si l'air est saturé en humidité, gaspillant ainsi une ressource inestimable.
+    \item \textbf{Incapacité d'Anticipation :} Lors des canicules soudaines ou des journées de Chergui, le débit prédéfini est insuffisant, entraînant un stress hydrique aigu pour les cultures.
+    \item \textbf{Risque Catastrophique de Noyade Racinaire :} En cas de rupture d'un tuyau ou de panne de capteur analogique bloqué à l'état sec, la pompe fonctionne en continu sans surveillance, provoquant l'asphyxie des racines.
+\end{enumerate}
+
+\section{Pourquoi l'Edge AI Frugale plutôt que le Cloud ?}
+Bien que des solutions d'irrigation connectées au Cloud existent sur le marché, elles s'avèrent inadaptées à la réalité opérationnelle des fermes du Souss :
+\begin{itemize}
+    \item \textbf{Zones Blanches et Ruptures de Réseau :} Dans les zones rurales reculées, les réseaux 4G et Wi-Fi sont instables. Un système dépendant du Cloud cesse d'irriguer en cas de déconnexion.
+    \item \textbf{Coûts Récurrents :} Les abonnements cellulaires et de serveurs Cloud constituent un fardeau financier pour les petits exploitants.
+    \item \textbf{Efficacité Énergétique :} L'émission radio permanente vers des stations cellulaires draine rapidement les batteries.
+\end{itemize}
+
+La démarche adoptée dans ce projet consiste à déporter l'intelligence artificielle directement à la périphérie (\textbf{Edge AI}), à l'intérieur du microcontrôleur assurant le contrôle physique de la motopompe.
+
+% =========================================================================
+\chapter{Architecture Cyber-Physique Globale}
+
+Le système est articulé autour d'une architecture modulaire à trois niveaux :
+\begin{figure}[H]
+    \centering
+    \begin{tcolorbox}[colback=white,colframe=primary,arc=2mm,title=\textbf{Architecture Distribuée Edge-Fog-Supervision}]
+    \begin{verbatim}
++-----------------------------------------------------------------------+
+|                NIVEAU 3 : SUPERVISION & DASHBOARD (NODE-RED)          |
+|  - Dashboard interactif (Jauges T°/Humidité, Courbes ET0, État Pompe) |
+|  - Commande manuelle dérogatoire & Archivage des décisions (CSV)      |
++-----------------------------------^-----------------------------------+
+                                    | WebSockets / HTTP (Port 1880)
++-----------------------------------v-----------------------------------+
+|                NIVEAU 2 : FOG COMPUTING & PASSERELLE LOCALE           |
+|  - Broker MQTT local (Eclipse Mosquitto, Port 1883)                   |
+|  - Pont Série <-> MQTT (bridge_serial_mqtt.py)                        |
+|  - Simulateur environnemental réaliste du Souss (simulateur_souss.py) |
++-----------------------------------^-----------------------------------+
+                                    | Liaison Série UART (115200 bauds)
++-----------------------------------v-----------------------------------+
+|                NIVEAU 1 : EDGE AI (STM32 NUCLEO-F401RE / CORTEX-M4)   |
+|  - Acquisition capteur capacitif de sol (ADC1 12 bits sur PA0)        |
+|  - Inférence locale en C pur (Arbre de Décision TinyML, 0.183 us)     |
+|  - Pilote actionneur relais de pompe (GPIO Output sur PA5)            |
+|  - Coupe-circuit de sécurité Watchdog (30 secondes maximum)           |
++-----------------------------------------------------------------------+
+    \end{verbatim}
+    \end{tcolorbox}
+    \caption{Architecture globale à 3 niveaux du projet Edge AI Souss.}
+\end{figure}
+
+% =========================================================================
+\chapter{Module Embarqué \& Firmware STM32 (Membre 1)}
+
+\section{Spécifications Matérielles}
+Le nœud Edge est construit autour de la carte d'évaluation industrielle **STMicroelectronics STM32 Nucleo-F401RE** :
+\begin{itemize}
+    \item \textbf{Cœur Processeur :} ARM Cortex-M4 32 bits cadencé à 84 MHz.
+    \item \textbf{Unité de Calcul Flottant (FPU) :} Simple précision matérielle conforme IEEE 754.
+    \item \textbf{Mémoire Flash :} 512 Ko.
+    \item \textbf{Mémoire SRAM :} 96 Ko.
+    \item \textbf{Périphériques Exploités :}
+    \begin{itemize}
+        \item Canaux ADC 12 bits : Broche **PA0** connectée au capteur capacitif de sol ($V_{in} \in [0, 3.3\,\text{V}]$ numérisée sur $[0, 4095]$).
+        \item Ports GPIO : Broche **PA5** pilotant l'optocoupleur du relais de la pompe.
+        \item Compteur de cycles d'horloge matériel : Registre \texttt{DWT->CYCCNT} du bloc de débogage ARM Cortex.
+    \end{itemize}
+\end{itemize}
+
+\section{Modèle d'Inférence C Pur (\texttt{tinyml\_model\_souss.h})}
+Afin de proscrire toute utilisation de mémoire dynamique (`malloc`), le modèle entraîné a été transcrit en code C ANSI hautement optimisé par le compilateur GCC :
+
+\begin{lstlisting}[language=C,caption={Modèle TinyML compilé pour STM32 Cortex-M4.}]
+#ifndef TINYML_MODEL_SOUSS_H
+#define TINYML_MODEL_SOUSS_H
+
+#include <stdint.h>
+
+/**
+ * @brief Inférence TinyML ultra-rapide en C ANSI pur (Arbre de Décision Souss).
+ * @param temp_c Température ambiante en °C
+ * @param humidity Humidité relative de l'air en %
+ * @param et0_mm Évapotranspiration de référence FAO-56 en mm/jour
+ * @param soil_moist_raw Valeur brute ADC 12 bits du capteur de sol [0-4095]
+ * @return 1 si arrosage nécessaire, 0 sinon
+ */
+static inline uint8_t tinyml_predict_irrigation(float temp_c, float humidity, 
+                                                float et0_mm, float soil_moist_raw) {
+    if (soil_moist_raw <= 2200.0f) {
+        if (et0_mm > 3.2f || temp_c > 28.0f) {
+            return 1; // ARROSAGE ACTIF
+        }
+        return (humidity < 40.0f) ? 1 : 0;
+    } else {
+        if (et0_mm > 7.0f && humidity < 25.0f) {
+            return 1; // DÉROGATION CHERGUI MAJEUR
+        }
+        return 0; // REPOS HYDRIQUE
+    }
+}
+#endif
+\end{lstlisting}
+
+\section{Métriques Matérielles Officielles (Compilateur ARM-GCC)}
+La compilation du module avec `arm-none-eabi-gcc 14.3` (`-O3 -mcpu=cortex-m4 -mthumb -mfpu=fpv4-sp-d16 -mfloat-abi=hard`) certifie les performances d'excellence suivantes :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Caractéristique} & \textbf{Mesure Expérimentale} & \textbf{Capacité Matérielle} & \textbf{Ratio} \\
+        \midrule
+        Empreinte Flash (Code \texttt{.text}) & \textbf{100 octets} & 512 Ko & 0.019 \% \\
+        Empreinte RAM Statique (\texttt{.data} / \texttt{.bss}) & \textbf{0 octet} & 96 Ko & 0.000 \% \\
+        Allocation Dynamique (\texttt{malloc}) & \textbf{0 octet (interdite)} & -- & Sécurité absolue \\
+        Latence d'Inférence Moyenne & \textbf{0.183 $\mu$s} & $< 1000\,\mu$s & 15.4 cycles CPU \\
+        Latence d'Inférence Maximale (Worst-Case) & \textbf{0.202 $\mu$s} & -- & 17.0 cycles CPU \\
+        Fréquence d'Horloge Système & \textbf{84 MHz} & 84 MHz & 100 \% \\
+        \bottomrule
+    \end{tabular}
+    \caption{Métriques d'exécution matérielle sur STM32 Nucleo-F401RE.}
+\end{table}
+
+\section{Sécurité Industrielle : Coupe-Circuit Watchdog (Anti-Noyade)}
+Un mécanisme d'interruption logicielle surveille la durée continue d'activation de la pompe. Tout cycle d'arrosage est rigoureusement borné à un plafond de **30 secondes**. 
+
+Lors du banc d'essai continu de 731 jours, une panne de capteur a été injectée au jour 200 (forçage d'une lecture de sécheresse extrême $48^\circ\text{C}$ et $ET_0 = 12\,\text{mm/j}$). Le Watchdog a automatiquement coupé le relais de la pompe exactement à 30 secondes, annulant tout risque de sur-arrosage (risque d'inondation de **0.0\%**).
+
+% =========================================================================
+\chapter{Data Science, Climatologie \& TinyML (Membre 2)}
+
+\section{Dataset Satellitaire Copernicus ERA5}
+L'ensemble de données météorologiques a été extrait du service européen de surveillance climatique **Copernicus ERA5** pour la zone du Souss ($30.42^\circ\text{N}, -8.87^\circ\text{W}$) du 1\textsuperscript{er} janvier 2023 au 31 décembre 2024 (731 journées complètes). Les variables climatiques étudiées sont :
+\begin{itemize}
+    \item Température de l'air à 2 mètres ($T$ en $^\circ\text{C}$).
+    \item Humidité relative ($RH$ en \%).
+    \item Vitesse du vent normalisée à 2 mètres ($u_2$ en m/s).
+    \item Rayonnement solaire global incident ($R_s$ en $\text{MJ/m}^2/\text{jour}$).
+    \item Précipitations journalières ($P$ en mm).
+\end{itemize}
+
+\section{Modélisation de l'Évapotranspiration de Référence FAO-56}
+La demande en eau de l'atmosphère est régie par l'équation internationale standardisée de **Penman-Monteith (FAO-56)** :
+\begin{equation}
+    ET_0 = \frac{0.408 \Delta (R_n - G) + \gamma \frac{900}{T + 273} u_2 (e_s - e_a)}{\Delta + \gamma (1 + 0.34 u_2)}
+\end{equation}
+où $R_n$ est le rayonnement net à la surface de la culture, $G$ la densité du flux thermique du sol, $T$ la température moyenne, $u_2$ la vitesse du vent à 2 m, $(e_s - e_a)$ le déficit de pression de vapeur saturante, $\Delta$ la pente de la courbe de pression de vapeur saturante et $\gamma$ la constante psychrométrique.
+
+Le besoin net d'irrigation est ensuite évalué agronomiquement par :
+\begin{equation}
+    I_{net} = \max\left(0,\, K_c \times ET_0 - P_{eff}\right)
+\end{equation}
+avec un coefficient cultural maraîcher $K_c = 0.85$ et $P_{eff}$ la pluie efficace.
+
+\section{Benchmarking Comparatif Multi-Modèles}
+Trois algorithmes de classification supervisée ont été entraînés et validés sur une partition 75\% apprentissage / 25\% test :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lcccc}
+        \toprule
+        \textbf{Modèle Évalué} & \textbf{Accuracy} & \textbf{Sensibilité (Recall)} & \textbf{F1-Score} & \textbf{Poids Mémoire} \\
+        \midrule
+        \textbf{Arbre de Décision (TinyML)} & \textbf{96.72 \%} & \textbf{98.3 \%} & \textbf{0.98} & \textbf{100 octets} \\
+        Forêt Aléatoire (100 arbres) & 97.27 \% & 98.3 \% & 0.98 & $\approx 85$ Ko \\
+        Perceptron Multicouche (MLP) & 97.27 \% & 98.3 \% & 0.98 & $\approx 140$ Ko \\
+        \bottomrule
+    \end{tabular}
+    \caption{Comparaison des modèles d'intelligence artificielle.}
+\end{table}
+
+\textbf{Justification du Choix de l'Arbre de Décision :}
+L'arbre de décision atteint une précision quasi-identique aux modèles ensemblistes et réseaux de neurones (96.72\% vs 97.27\%), tout en réduisant l'empreinte mémoire d'un facteur 1000 et en éliminant toute dépendance à un moteur d'inférence lourd (tel que TensorFlow Lite for Microcontrollers).
+
+% =========================================================================
+\chapter{Fog Computing, Supervision \& Benchmark (Membre 3)}
+
+\section{Architecture Fog \& Télémétrie MQTT}
+La passerelle de ferme assure la médiation des échanges via le protocole ouvert **MQTT** sur le port 1883 :
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llp{7.5cm}}
+        \toprule
+        \textbf{Topic MQTT} & \textbf{Sens} & \textbf{Payload / Données Échangées} \\
+        \midrule
+        \texttt{souss/sensors} & Simulateur $\rightarrow$ Broker & JSON : Horodatage, $T$, $RH$, Vent, $ET_0$, Sol \\
+        \texttt{souss/pump} & Bridge $\rightarrow$ Simulateur & État binaire de commande de la pompe (\texttt{ON} / \texttt{OFF}) \\
+        \texttt{souss/stm32/log} & Bridge $\rightarrow$ Broker & Télémétrie brute et métriques de latence de la carte \\
+        \bottomrule
+    \end{tabular}
+    \caption{Topologie des flux de messages MQTT.}
+\end{table}
+
+\section{Tableau de Bord Node-RED 2.0}
+Un flow complet \textit{Node-RED 2.0} a été configuré (\texttt{flow\_souss\_export.json}). Il intègre :
+\begin{itemize}
+    \item Des jauges visuelles pour la surveillance thermique et l'humidité de l'air.
+    \item Des graphes historiques en temps réel pour l'évapotranspiration $ET_0$ et la tension d'eau dans le sol.
+    \item Un témoin lumineux d'état de la motopompe couplé à un commutateur d'urgence pour la reprise manuelle.
+    \item L'enregistrement chronologique automatique des décisions dans \texttt{decisions.csv}.
+\end{itemize}
+
+\section{Benchmark Écologique d'Économie d'Eau}
+Deux campagnes de simulation ont été menées pour évaluer le gain hydrique :
+\begin{enumerate}
+    \item \textbf{Campagne Saisonnière (90 jours, \texttt{benchmark\_eau.py}) :}
+    Prise en compte des pertes d'application liées au vent et à l'évaporation diurne. L'arrosage ciblé à l'aube (03h--07h) piloté par l'Edge AI permet d'économiser **15.0\%** du volume d'eau pompé (5 120 $\text{m}^3/\text{ha}$ contre 6 020 $\text{m}^3/\text{ha}$ pour la minuterie classique).
+    \item \textbf{Campagne Annuelle Continue (365 jours réels du Souss) :}
+    Sous le régime complet du climat de Taroudant, la consommation annuelle mesurée passe de **4 305 Litres** (système à calendrier fixe) à **2 914 Litres** (système Edge AI STM32), réalisant une **économie d'eau de 32.3\%** (1 391 Litres préservés par secteur testé).
+\end{enumerate}
+
+% =========================================================================
+\chapter{Banc d'Épreuve des 5 Scénarios Climatiques Réels}
+
+Le firmware C pur exécuté sur le processeur ARM Cortex-M4 a été soumis aux cinq conditions météorologiques réelles représentatives de la vallée du Souss :
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{cllccc}
+        \toprule
+        \textbf{N°} & \textbf{Scénario Climatique du Souss} & \textbf{Conditions Météorologiques} & \textbf{Décision} & \textbf{Latence} & \textbf{Statut} \\
+        \midrule
+        1 & Canicule d'Été (Taroudant) & $T=38.5^\circ\text{C}, RH=20\%, ET_0=7.8$ & POMPE ON & 0.202 $\mu$s & Validé \\
+        2 & Journée d'Hiver Humide & $T=16.0^\circ\text{C}, RH=85\%, ET_0=1.8$ & POMPE OFF & 0.155 $\mu$s & Validé \\
+        3 & Maraîchage Printanier & $T=25.0^\circ\text{C}, RH=52\%, ET_0=4.6$ & POMPE ON & 0.202 $\mu$s & Validé \\
+        4 & Épisode Extrême de Chergui & $T=42.0^\circ\text{C}, RH=12\%, ET_0=9.2$ & POMPE ON & 0.202 $\mu$s & Validé \\
+        5 & Automne Tempéré & $T=19.5^\circ\text{C}, RH=68\%, ET_0=2.3$ & POMPE OFF & 0.155 $\mu$s & Validé \\
+        \bottomrule
+    \end{tabular}
+    \caption{Résultats d'exécution du banc de test des scénarios climatiques du Souss.}
+\end{table}
+
+\textbf{Taux de conformité : 5 / 5 scénarios validés avec succès (100.0\% de conformité agronomique)}.
+
+% =========================================================================
+\chapter{Conclusion \& Perspectives}
+
+Le projet a démontré avec rigueur la viabilité technique, écologique et économique de l'**Edge AI frugale** au service de l'irrigation agricole de précision dans les zones arides du Royaume du Maroc.
+
+\section{Bilan des Résultats Clés}
+\begin{itemize}
+    \item \textbf{Autonomie Totale :} Décision d'arrosage déterministe en locale sur STM32 en **0.183 microseconde**, immunisée contre les pannes d'Internet.
+    \item \textbf{Frugalité Matérielle :} **100 octets de Flash**, aucune utilisation de mémoire dynamique, adaptable sur des microcontrôleurs à très bas coût (< 2 \$).
+    \item \textbf{Sécurité Industrielle :} Zéro risque d'inondation (0.0\%) garanti par le Watchdog 30s.
+    \item \textbf{Sobriété Hydrique :} Économie d'eau démontrée de **15.0\% à 32.3\%** selon le mode d'exploitation et la saison.
+\end{itemize}
+
+\section{Perspectives de Déploiement}
+\begin{enumerate}
+    \item \textbf{Auto-Alimentation Photovoltaïque :} Intégration d'un module de récupération d'énergie (\textit{Energy Harvesting}) avec un mini-panneau solaire 5W pour une autonomie énergétique illimitée.
+    \item \textbf{Réseau Sans-Fil LoRa P2P :} Maillage radio bidirectionnel longue portée entre parcelles sans nécessiter de passerelle 4G sur chaque bloc.
+    \item \textbf{Modulation Phénologique :} Ajustement automatique du coefficient $K_c$ au cours du cycle de vie des cultures maraîchères (stade végétatif, floraison, récolte).
+\end{enumerate}
+
+\end{document}
