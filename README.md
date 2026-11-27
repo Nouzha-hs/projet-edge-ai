@@ -67,9 +67,9 @@ $$I_{net} = \max(0, K_c \times ET_0 - P_{eff})$$
   - Entraînement multi-modèles et évaluation statistique (`ai_model/train_souss_model.py`).
   - Matrice de confusion, F1-score et export du modèle vers le code C.
 - **👤 Membre 3 (Fog Computing, Simulation Système & Dashboard)** :
-  - Simulateur environnemental et météorologique (`fog_server/simulate_environment.py`).
-  - Déploiement du broker Mosquitto MQTT et du tableau de bord Node-RED.
-  - Calcul comparatif de l'économie d'eau ($m^3/ha$) : Seuil Fixe vs Edge AI.
+  - Simulateur climatique réaliste du Souss (`fog_server/simulateur_souss.py`) et pont série-MQTT (`fog_server/bridge_serial_mqtt.py`).
+  - Déploiement du broker Mosquitto MQTT (`fog_server/mosquitto.conf`) et du tableau de bord Node-RED (`fog_server/flow_souss_export.json`).
+  - Benchmark écologique comparatif (`fog_server/benchmark_eau.py`) : Seuil Fixe vs Edge AI (jusqu'à 32.3% d'économie d'eau).
 
 ---
 
@@ -115,7 +115,11 @@ projet-edge-ai/
 │   │   ├── tinyml_model_souss.h                 # Modèle d'inférence TinyML en C pur
 │   │   └── souss_test_vectors.h                 # Scénarios réels du Souss (canicule, Chergui, hiver)
 │   └── test_simulation_souss_main.c             # Programme complet de benchmark avec DWT
-├── fog_server/           # Scripts de simulation d'environnement et supervision
-│   └── simulate_environment.py                 # Simulateur 30 jours et calcul d'économie d'eau
+├── fog_server/           # Architecture Fog Computing, MQTT, Node-RED & Benchmark
+│   ├── simulateur_souss.py                      # Simulateur météo réaliste du Souss (canicule, Chergui, hiver)
+│   ├── bridge_serial_mqtt.py                    # Pont série UART STM32 <-> broker MQTT Mosquitto
+│   ├── benchmark_eau.py                         # Benchmark comparatif de consommation d'eau
+│   ├── flow_souss_export.json                   # Dashboard temps réel Node-RED 2.0
+│   └── mosquitto.conf                           # Configuration du broker local Mosquitto MQTT
 └── README.md             # Présentation générale du projet
 ```
